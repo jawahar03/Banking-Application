@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,9 +27,10 @@ public class Branch {
 	private Bank bank;
 	@OneToOne(cascade = CascadeType.ALL)
 	private Address address;
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<User> user;
 	@OneToOne
 	private Manager manager;
 	private String ifscCode;
 }
+

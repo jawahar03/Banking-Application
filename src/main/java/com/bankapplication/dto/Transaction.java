@@ -21,7 +21,7 @@ public class Transaction
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int transactionId;
 	private double amount;
-	private Account toAccount;
+	private int toAccount;
 	private Date date;
 	private TransactionType type;
 	private TransactionStatus status;

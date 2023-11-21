@@ -21,8 +21,7 @@ public class Manager
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int managerId;
-	@OneToOne(cascade = CascadeType.ALL)
-	private Address address;
+	private long contact;
 	@OneToOne(cascade = CascadeType.ALL)
 	private Branch branch;
 	private String name;
