@@ -22,13 +22,19 @@ public class BranchService
 	@Autowired
 	BankDao bDao;
 	
-	public ResponseEntity<ResponseStructure<Branch>> saveBranch(Branch branch)
+	public ResponseEntity<ResponseStructure<Branch>> saveBranch(Branch branch , int id)
 	{
 		ResponseStructure<Branch> res = new ResponseStructure<>();
-		res.setData(dao.saveBranch(branch));
-		res.setMsg("Branch has been saved");
-		res.setStatus(HttpStatus.CREATED.value());
+		Bank exBank = bDao.findBank(id);
+		Branch savedBranch = dao.saveBranch(branch);
+		exBank.getBranch().add(savedBranch);
+		savedBranch.setBank(exBank);
+		dao.updateBranch(savedBranch.getBranchId(), savedBranch);
 		
+		res.setData(savedBranch);
+		res.setMsg("Branch has been added");
+		res.setStatus(HttpStatus.CREATED.value());
+			
 		return new ResponseEntity<ResponseStructure<Branch>>(res , HttpStatus.CREATED);
 	}
 	
@@ -107,4 +113,5 @@ public class BranchService
 			return null; // No bank found exception
 		}
 	}
+	
 }

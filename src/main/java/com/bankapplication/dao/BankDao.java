@@ -45,7 +45,7 @@ public class BankDao
 		Bank ex = findBank(id);
 		if(ex != null)
 		{
-			b.setBandId(id);
+			b.setBankId(id);
 			return repo.save(b);
 		}
 		return null;

@@ -23,7 +23,7 @@ public class Branch {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int branchId;
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private Bank bank;
 	@OneToOne(cascade = CascadeType.ALL)
 	private Address address;

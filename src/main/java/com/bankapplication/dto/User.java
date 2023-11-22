@@ -24,6 +24,6 @@ public class User {
 	private Address address;
 	@OneToOne(cascade = CascadeType.ALL)	
 	private Account account;
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	private Branch branch;
 }
