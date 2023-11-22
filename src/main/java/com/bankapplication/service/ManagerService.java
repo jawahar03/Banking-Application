@@ -1,6 +1,7 @@
 package com.bankapplication.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,12 @@ public class ManagerService
 		Manager m = dao.saveManager(manager);
 		branch.setManager(m);
 		m.setBranch(branch);
-		//ResponseStructure<T>
+		dao.updateManager(m.getManagerId(), m);
+		ResponseStructure<Manager> res = new ResponseStructure<>();
+		res.setData(m);
+		res.setMsg("Manager has been saved");
+		res.setStatus(HttpStatus.CREATED.value());
+		
+		return new ResponseEntity<ResponseStructure<Manager>>(res, HttpStatus.CREATED);
 	}
 }
