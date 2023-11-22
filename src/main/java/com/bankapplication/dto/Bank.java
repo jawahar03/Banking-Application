@@ -22,7 +22,7 @@ public class Bank
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int bandId;
+	private int bankId;
 	private String bankName;
 	@OneToOne(cascade = CascadeType.ALL)
 	private Address address;

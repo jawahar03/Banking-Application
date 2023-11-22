@@ -38,4 +38,10 @@ public class BankController
 	{
 		return ser.updateBank(id, b);
 	}
+	
+	@PutMapping("/assign")
+	public ResponseEntity<ResponseStructure<Bank>> assignBranch(@RequestParam int branchId , @RequestParam int bankId)
+	{
+		return ser.setBranchToBank(branchId, bankId);
+	}
 }
