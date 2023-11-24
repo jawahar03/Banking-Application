@@ -51,7 +51,7 @@ public class BranchService
 			return new ResponseEntity<ResponseStructure<Branch>>(res , HttpStatus.FOUND);
 		}
 		else {
-			return null; //no branch found exception
+			return null; //no branch found  exception
 		}
 	}
 	

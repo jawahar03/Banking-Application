@@ -10,6 +10,7 @@ import com.bankapplication.dao.BranchDao;
 import com.bankapplication.dao.ManagerDao;
 import com.bankapplication.dto.Branch;
 import com.bankapplication.dto.Manager;
+import com.bankapplication.repo.ManagerRepo;
 
 @Service
 public class ManagerService
@@ -18,6 +19,8 @@ public class ManagerService
 	ManagerDao dao;
 	@Autowired
 	BranchDao bDao;
+	@Autowired
+	ManagerRepo repo;
 	
 	public ResponseEntity<ResponseStructure<Manager>> saveManager(Manager manager , int id)
 	{
@@ -88,6 +91,29 @@ public class ManagerService
 		}
 		else {
 			return null; //no manager found
+		}
+	}
+	
+	public ResponseEntity<ResponseStructure<Manager>> login(String name, String password)
+	{
+		ResponseStructure<Manager> res = new ResponseStructure<>();
+		if(repo.findManager(name)!=null)
+		{
+			Manager manager = repo.findManager(name);
+			if(manager.getPassword().equals(password))
+			{
+				res.setData(manager);
+				res.setMsg("Loggeed in");
+				res.setStatus(HttpStatus.CREATED.value());
+				
+				return new ResponseEntity<ResponseStructure<Manager>>(res,HttpStatus.CREATED);
+			}
+			else {
+				return null; //manager password mismatch exception
+			}
+		}
+		else {
+			return null; //no manager found exception
 		}
 	}
 	

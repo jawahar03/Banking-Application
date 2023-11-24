@@ -31,6 +31,7 @@ public class Branch {
 	@OneToOne(cascade = CascadeType.ALL)
 	private Address address;
 	@OneToMany(cascade = CascadeType.ALL)
+	@JsonIgnore
 	private List<User> user;
 	@JsonIgnore
 	@OneToOne
