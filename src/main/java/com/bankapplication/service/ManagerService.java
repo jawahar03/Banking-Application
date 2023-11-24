@@ -33,4 +33,70 @@ public class ManagerService
 		
 		return new ResponseEntity<ResponseStructure<Manager>>(res, HttpStatus.CREATED);
 	}
+	
+	public ResponseEntity<ResponseStructure<Manager>> findManager(int id)
+	{
+		ResponseStructure<Manager> res = new ResponseStructure<>();
+		if(dao.findManager(id)!=null)
+		{
+			res.setData(dao.findManager(id));
+			res.setMsg("Manager found");
+			res.setStatus(HttpStatus.CREATED.value());
+			
+			return new ResponseEntity<ResponseStructure<Manager>>(res , HttpStatus.CREATED);
+		}
+		else {
+			return null; //no manager found exception
+		}
+	}
+	
+	public ResponseEntity<ResponseStructure<Manager>> deleteManager(int id)
+	{
+		ResponseStructure<Manager> res = new ResponseStructure<>();
+		if(dao.findManager(id)!=null)
+		{
+			res.setData(dao.deleteManager(id));
+			res.setMsg("Manager with id"+id+" is deleted");
+			res.setStatus(HttpStatus.CREATED.value());
+			
+			return new ResponseEntity<ResponseStructure<Manager>>(res , HttpStatus.CREATED);
+		}
+		else {
+			return null; //no manager found exception
+		}
+	}
+	
+	public ResponseEntity<ResponseStructure<Manager>> updateManage(int id , Manager m)
+	{
+		ResponseStructure<Manager> res = new ResponseStructure<>();
+		if(dao.findManager(id)!=null)
+		{
+			Manager manager = dao.findManager(id);
+			m.setManagerId(manager.getManagerId());
+			res.setData(dao.saveManager(manager));
+			res.setMsg("Manager has been updated");
+			res.setStatus(HttpStatus.CREATED.value());
+			return new ResponseEntity<ResponseStructure<Manager>>(res , HttpStatus.CREATED);			
+		}
+		else {
+			return null; //no manager found
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
