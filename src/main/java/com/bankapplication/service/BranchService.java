@@ -13,6 +13,7 @@ import com.bankapplication.dao.BankDao;
 import com.bankapplication.dao.BranchDao;
 import com.bankapplication.dto.Bank;
 import com.bankapplication.dto.Branch;
+import com.bankapplication.dto.Manager;
 
 @Service
 public class BranchService 
@@ -59,6 +60,16 @@ public class BranchService
 		if(dao.findBranch(id)!= null)
 		{
 			ResponseStructure<Branch> res = new ResponseStructure<>();
+			Branch exBranch = dao.findBranch(id);
+			Bank bank = exBranch.getBank();
+			Manager exMan = exBranch.getManager();
+			
+			exBranch.setBank(null);
+			exBranch.setManager(null);
+			exMan.setBranch(null);
+			bank.getBranch().remove(exBranch);
+			dao.updateBranch(id, exBranch);
+			
 			res.setData(dao.deleteBranch(id));
 			res.setMsg("Branch with id:"+id+" has been deleted");
 			res.setStatus(HttpStatus.CREATED.value());
