@@ -2,6 +2,7 @@ package com.bankapplication.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,5 +24,11 @@ public class UserController
 	public ResponseEntity<ResponseStructure<User>> saveUser(@RequestBody User u, @RequestParam int accType, @RequestParam String mName, @RequestParam String password )
 	{
 		return ser.saveUser(u, accType, mName, password);
+	}
+	
+	@GetMapping
+	public ResponseEntity<ResponseStructure<User>> findUser(@RequestParam int id)
+	{
+		return ser.findUser(id);
 	}
 }

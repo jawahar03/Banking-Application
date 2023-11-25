@@ -52,4 +52,20 @@ public class UserService {
 			return null; // manager not found exception
 		}
 	}
+	
+	
+	public ResponseEntity<ResponseStructure<User>> findUser(int id)
+	{
+		ResponseStructure<User> res = new ResponseStructure<>();
+		if(udao.findUser(id)!=null)
+		{
+			res.setData(udao.findUser(id));
+			res.setMsg("User with id: "+id+" is found");
+			res.setStatus(HttpStatus.FOUND.value());
+			return new ResponseEntity<ResponseStructure<User>>(res, HttpStatus.FOUND);
+		}
+		else {
+			return null; //no user found exception
+		}
+	}
 }
