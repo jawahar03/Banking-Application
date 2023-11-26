@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,8 +25,8 @@ public class User {
 	private String name;
 	@OneToOne(cascade = CascadeType.ALL)
 	private Address address;
-	@OneToOne(cascade = CascadeType.ALL)	
-	private Account account;
 	@OneToOne(cascade = CascadeType.ALL)
+	private Account account;
+	@ManyToOne(cascade = CascadeType.ALL)
 	private Branch branch;
 }

@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 import com.bankapplication.config.ResponseStructure;
 import com.bankapplication.dao.BranchDao;
 import com.bankapplication.dao.ManagerDao;
+import com.bankapplication.dao.UserDao;
 import com.bankapplication.dto.Branch;
 import com.bankapplication.dto.Manager;
+import com.bankapplication.dto.User;
 import com.bankapplication.repo.ManagerRepo;
 
 @Service
@@ -21,6 +23,9 @@ public class ManagerService
 	BranchDao bDao;
 	@Autowired
 	ManagerRepo repo;
+	@Autowired
+	UserDao udao;
+	
 	
 	public ResponseEntity<ResponseStructure<Manager>> saveManager(Manager manager , int id)
 	{
@@ -110,6 +115,49 @@ public class ManagerService
 			}
 			else {
 				return null; //manager password mismatch exception
+			}
+		}
+		else {
+			return null; //no manager found exception
+		}
+	}
+	
+	
+	public ResponseEntity<ResponseStructure<User>> changeBranch(int uid, int bid, String mname, String mpassword)
+	{
+		ResponseStructure<User> res = new ResponseStructure<>();
+		Manager m = dao.login(mname, mpassword);
+		if(m!=null)
+		{
+			User u = udao.findUser(uid);
+			if(u!=null)
+			{
+				Branch b = bDao.findBranch(bid);
+				if(b!=null)
+				{
+					if(u.getBranch().getBranchId()!=bid)
+					{
+						Branch exBranch = u.getBranch();
+						exBranch.getUser().remove(u);
+						bDao.updateBranch(exBranch.getBranchId(), exBranch);
+						u.setBranch(b);
+						b.getUser().add(u);
+						bDao.updateBranch(bid, b);
+						res.setData(u);
+						res.setMsg("User account moved to new branch");
+						res.setStatus(HttpStatus.CREATED.value());
+						return new ResponseEntity<ResponseStructure<User>>(res,HttpStatus.CREATED);
+					}
+					else {
+						return null; //User already present in this branch
+					}
+				}
+				else {
+					return null; //no branch found exception
+				}
+			}
+			else {
+				return null; //no user found exception
 			}
 		}
 		else {

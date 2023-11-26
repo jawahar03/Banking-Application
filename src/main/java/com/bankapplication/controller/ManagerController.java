@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bankapplication.config.ResponseStructure;
+import com.bankapplication.dto.Branch;
 import com.bankapplication.dto.Manager;
+import com.bankapplication.dto.User;
 import com.bankapplication.service.ManagerService;
 
 @RestController
@@ -50,6 +52,12 @@ public class ManagerController
 	public ResponseEntity<ResponseStructure<Manager>> login(@RequestParam String name , String password )
 	{
 		return ser.login(name, password);
+	}
+	
+	@PutMapping("/changebr")
+	public ResponseEntity<ResponseStructure<User>> changeBanch(@RequestParam int uid,@RequestParam int bid, @RequestParam String mname, @RequestParam String mpassword)
+	{
+		return ser.changeBranch(uid, bid, mname, mpassword);
 	}
 	
 }

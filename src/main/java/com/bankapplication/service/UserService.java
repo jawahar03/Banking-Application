@@ -1,11 +1,14 @@
 package com.bankapplication.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.bankapplication.config.ResponseStructure;
+import com.bankapplication.dao.BranchDao;
 import com.bankapplication.dao.ManagerDao;
 import com.bankapplication.dao.UserDao;
 import com.bankapplication.dto.Account;
@@ -20,6 +23,8 @@ public class UserService {
 	ManagerDao mdao;
 	@Autowired
 	UserDao udao;
+	@Autowired
+	BranchDao bdao;
 
 	public ResponseEntity<ResponseStructure<User>> saveUser(User user, int accType, String name, String password) {
 		ResponseStructure<User> res = new ResponseStructure<>();
@@ -68,4 +73,60 @@ public class UserService {
 			return null; //no user found exception
 		}
 	}
+	
+	public ResponseEntity<ResponseStructure<User>> deleteUser(int id)
+	{
+		ResponseStructure<User> res = new ResponseStructure<>();
+		User user = udao.findUser(id);
+		if(user!=null)
+		{
+			Branch b = user.getBranch();
+			user.setBranch(null);
+			b.getUser().remove(user);
+			bdao.updateBranch(b.getBranchId(), b);
+			res.setData(udao.deleteUser(id));
+			res.setMsg("User with id: "+id+" has been deleted");
+			res.setStatus(HttpStatus.CREATED.value());
+			return new ResponseEntity<ResponseStructure<User>>(res, HttpStatus.CREATED);
+		}
+		else {
+			return null; //user not found exception
+		}
+	}
+	
+	public ResponseEntity<ResponseStructure<User>> updateUser(int id , User u)
+	{
+		ResponseStructure<User> res = new ResponseStructure<>();
+		User exStu = udao.findUser(id);
+		if(exStu !=null)
+		{
+			u.setUserId(exStu.getUserId());
+			res.setData(u);
+			res.setMsg("User has been updated");
+			res.setStatus(HttpStatus.CREATED.value());
+			
+			return new ResponseEntity<ResponseStructure<User>>(res,HttpStatus.CREATED);
+		}
+		else {
+			return null; //no user found exception
+		}
+	}
+	
+	public ResponseEntity<ResponseStructure<List<User>>> findAllUser()
+	{
+		ResponseStructure<List<User>> res = new ResponseStructure<>();
+		res.setData(udao.findAllUser());
+		res.setMsg("All user has been found");
+		res.setStatus(HttpStatus.FOUND.value());
+		return new ResponseEntity<ResponseStructure<List<User>>>(res, HttpStatus.FOUND);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
