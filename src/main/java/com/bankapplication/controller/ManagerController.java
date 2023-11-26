@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bankapplication.config.ResponseStructure;
-import com.bankapplication.dto.Branch;
 import com.bankapplication.dto.Manager;
 import com.bankapplication.dto.User;
 import com.bankapplication.service.ManagerService;

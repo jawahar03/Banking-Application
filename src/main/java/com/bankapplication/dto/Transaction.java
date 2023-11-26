@@ -1,6 +1,6 @@
 package com.bankapplication.dto;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import org.springframework.stereotype.Component;
 
@@ -22,7 +22,7 @@ public class Transaction
 	private int transactionId;
 	private double amount;
 	private int toAccount;
-	private Date date;
+	private LocalDate date;
 	private TransactionType type;
 	private TransactionStatus status;
 	

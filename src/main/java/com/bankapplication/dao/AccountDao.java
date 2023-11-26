@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.bankapplication.dto.Account;
-import com.bankapplication.dto.Address;
 import com.bankapplication.repo.AccountRepo;
 
 @Repository
