@@ -35,30 +35,36 @@ public class TransactionService
 				Account toAccount = adao.findByAccountNumber(toAccNum);
 				if(toAccount!=null)
 				{
-					if(amount>=1)
+					if(fromAccount.getBalance() > amount)
 					{
-						fromAccount.setBalance(fromAccount.getBalance()-amount);
-						toAccount.setBalance(toAccount.getBalance()+amount);
-						Transaction t = new Transaction();
-						t.setAmount(amount);
-						t.setDate(LocalDate.now());
-						t.setStatus(TransactionStatus.SUCCESS);
-						t.setToAccount(toAccNum);
-						t.setType(TransactionType.CREDITED);
-						
-						dao.saveTransaction(t);
-						fromAccount.getTransaction().add(t);
-						adao.updateAccount(fromAccount.getAccountId(),fromAccount);
-						adao.updateAccount(toAccount.getAccountId(), toAccount);
-						
-						res.setData(t);
-						res.setMsg("Transaction successful");
-						res.setStatus(HttpStatus.CREATED.value());
-						
-						return new ResponseEntity<ResponseStructure<Transaction>>(res, HttpStatus.CREATED);
+						if(amount>=1)
+						{
+							fromAccount.setBalance(fromAccount.getBalance()-amount);
+							toAccount.setBalance(toAccount.getBalance()+amount);
+							Transaction t = new Transaction();
+							t.setAmount(amount);
+							t.setDate(LocalDate.now());
+							t.setStatus(TransactionStatus.SUCCESS);
+							t.setToAccount(toAccNum);
+							t.setType(TransactionType.CREDITED);
+							
+							dao.saveTransaction(t);
+							fromAccount.getTransaction().add(t);
+							adao.updateAccount(fromAccount.getAccountId(),fromAccount);
+							adao.updateAccount(toAccount.getAccountId(), toAccount);
+							
+							res.setData(t);
+							res.setMsg("Transaction successful");
+							res.setStatus(HttpStatus.CREATED.value());
+							
+							return new ResponseEntity<ResponseStructure<Transaction>>(res, HttpStatus.CREATED);
+						}
+						else {
+							return null; // invalid amount
+						}
 					}
 					else {
-						return null; // invalid amount
+						return null; //insufficient amount
 					}
 				}
 				else {
