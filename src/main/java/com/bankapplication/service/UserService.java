@@ -121,6 +121,29 @@ public class UserService {
 		return new ResponseEntity<ResponseStructure<List<User>>>(res, HttpStatus.FOUND);
 	}
 	
+	public ResponseEntity<ResponseStructure<User>> userLogin(String userName, String password)
+	{
+		ResponseStructure<User> res = new ResponseStructure<>();
+		User user = udao.findByName(userName);
+		if(user != null)
+		{
+			Account a = user.getAccount();
+			if(a.getPassword().equals(password))
+			{
+				res.setData(user);
+				res.setMsg("User found");
+				res.setStatus(HttpStatus.FOUND.value());
+				
+				return new ResponseEntity<ResponseStructure<User>>(res,HttpStatus.FOUND);
+			}
+			else {
+				return  null; //forbidden
+			}
+		}
+		else {
+			return null; //user not found exception
+		}
+	}
 	
 	
 	

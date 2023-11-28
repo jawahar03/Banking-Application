@@ -46,4 +46,10 @@ public class UserController
 	{
 		return ser.findAllUser();
 	}
+	
+	@GetMapping("/login")
+	public ResponseEntity<ResponseStructure<User>> userLogin(@RequestParam String name, @RequestParam String password)
+	{
+		return ser.userLogin(name, password);
+	}
 }

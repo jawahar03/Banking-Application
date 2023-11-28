@@ -49,4 +49,14 @@ public class UserDao
 		}
 		return null;
 	}
+	
+	public User findByName(String name)
+	{
+		User u = repo.findByName(name);
+		if(u!=null)
+		{
+			return u;
+		}
+		return null;
+	}
 }
