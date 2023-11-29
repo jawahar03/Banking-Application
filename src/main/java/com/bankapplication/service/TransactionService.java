@@ -18,6 +18,12 @@ import com.bankapplication.dto.Transaction;
 import com.bankapplication.dto.TransactionStatus;
 import com.bankapplication.dto.TransactionType;
 import com.bankapplication.dto.User;
+import com.bankapplication.exception.IncorrectPassword;
+import com.bankapplication.exception.InsufficientAmount;
+import com.bankapplication.exception.InvalidAccountNumber;
+import com.bankapplication.exception.InvalidAmount;
+import com.bankapplication.exception.ManagerNotFound;
+import com.bankapplication.exception.UserNotFoundException;
 
 @Service
 public class TransactionService {
@@ -37,49 +43,55 @@ public class TransactionService {
 			if (fromAccount.getPassword().equals(password)) {
 				Account toAccount = adao.findByAccountNumber(toAccNum);
 				if (toAccount != null) {
-					if (fromAccount.getBalance() > amount) {
-						if (amount >= 1) {
-							fromAccount.setBalance(fromAccount.getBalance() - amount);
-							toAccount.setBalance(toAccount.getBalance() + amount);
-							Transaction t = new Transaction();
-							t.setAmount(amount);
-							t.setDate(LocalDate.now());
-							t.setStatus(TransactionStatus.SUCCESS);
-							t.setToAccount(toAccNum);
-							t.setType(TransactionType.DEBITED);
+					if(fromAccNum != toAccNum)
+					{
+						if (fromAccount.getBalance() > amount) {
+							if (amount >= 1) {
+								fromAccount.setBalance(fromAccount.getBalance() - amount);
+								toAccount.setBalance(toAccount.getBalance() + amount);
+								Transaction t = new Transaction();
+								t.setAmount(amount);
+								t.setDate(LocalDate.now());
+								t.setStatus(TransactionStatus.SUCCESS);
+								t.setToAccount(toAccNum);
+								t.setType(TransactionType.DEBITED);
 
-							Transaction t2 = new Transaction();
-							t2.setAmount(amount);
-							t2.setDate(LocalDate.now());
-							t2.setStatus(TransactionStatus.SUCCESS);
-							t2.setToAccount(fromAccNum);
-							t2.setType(TransactionType.CREDITED);
-							toAccount.getTransaction().add(t2);
+								Transaction t2 = new Transaction();
+								t2.setAmount(amount);
+								t2.setDate(LocalDate.now());
+								t2.setStatus(TransactionStatus.SUCCESS);
+								t2.setToAccount(fromAccNum);
+								t2.setType(TransactionType.CREDITED);
+								toAccount.getTransaction().add(t2);
 
-							dao.saveTransaction(t);
-							fromAccount.getTransaction().add(t);
-							adao.updateAccount(fromAccount.getAccountId(), fromAccount);
-							adao.updateAccount(toAccount.getAccountId(), toAccount);
+								dao.saveTransaction(t);
+								fromAccount.getTransaction().add(t);
+								adao.updateAccount(fromAccount.getAccountId(), fromAccount);
+								adao.updateAccount(toAccount.getAccountId(), toAccount);
 
-							res.setData(t);
-							res.setMsg("Transaction successful");
-							res.setStatus(HttpStatus.CREATED.value());
+								res.setData(t);
+								res.setMsg("Transaction successful");
+								res.setStatus(HttpStatus.CREATED.value());
 
-							return new ResponseEntity<ResponseStructure<Transaction>>(res, HttpStatus.CREATED);
+								return new ResponseEntity<ResponseStructure<Transaction>>(res, HttpStatus.CREATED);
+							} else {
+								throw new InvalidAmount("Invalid Amount");
+							}
 						} else {
-							return null; // invalid amount change the transaction status
+							throw new InsufficientAmount("Insufficient Amount");
 						}
-					} else {
-						return null; // insufficient amount
+					}
+					else {
+						throw new InvalidAccountNumber("From Account Number And To Account Number Cannot Be Same");
 					}
 				} else {
-					return null;// no account(to account) found exception
+					throw new InvalidAccountNumber("Invalid Receiver Account Number");
 				}
 			} else {
-				return null; // forbidden
+				throw new IncorrectPassword("Incorrect Password");
 			}
 		} else {
-			return null; // no account(from account) found exception
+			throw new InvalidAccountNumber("Invalid Account Number");
 		}
 	}
 
@@ -109,11 +121,11 @@ public class TransactionService {
 				return new ResponseEntity<ResponseStructure<List<Transaction>>>(res, HttpStatus.FOUND);
 
 			} else {
-				return null; // forbidden
+				throw new IncorrectPassword("Incorrect Password");
 			}
 
 		} else {
-			return null; // no user found
+			throw new UserNotFoundException("User Not Found");
 		}
 	}
 }

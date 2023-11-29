@@ -13,6 +13,9 @@ import com.bankapplication.dao.BankDao;
 import com.bankapplication.dao.BranchDao;
 import com.bankapplication.dto.Bank;
 import com.bankapplication.dto.Branch;
+import com.bankapplication.exception.BankNotFound;
+import com.bankapplication.exception.BranchNotFound;
+import com.bankapplication.exception.UserNotFoundException;
 
 @Service
 public class BankService {
@@ -38,7 +41,7 @@ public class BankService {
 			str.setMsg("Bank with id::" + id + " is found");
 			return new ResponseEntity<ResponseStructure<Bank>>(str, HttpStatus.FOUND);
 		}
-		return null; // Bank not found exception
+		throw new BankNotFound("Bank Not Found In The Given Id");
 	}
 
 	public ResponseEntity<ResponseStructure<Bank>> updateBank(int id, Bank bank) {
@@ -49,7 +52,7 @@ public class BankService {
 			str.setMsg("Bank with id::" + id + " is updated");
 			return new ResponseEntity<ResponseStructure<Bank>>(str, HttpStatus.FOUND);
 		}
-		return null; // Bank not found exception
+		throw new BankNotFound("Bank Not Found In The Given Id");
 
 	}
 
@@ -70,10 +73,10 @@ public class BankService {
 				return new ResponseEntity<ResponseStructure<Bank>>(res, HttpStatus.CREATED);
 				
 			} else {
-				return null; // No branch Found Exception
+				throw new BranchNotFound("Branch Not Found In The Given Id");
 			}
 		} else {
-			return null; // No bank found exception
+			throw new BankNotFound("Bank Not Found In The Given Id");
 		}
 	}
 

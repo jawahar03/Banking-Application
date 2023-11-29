@@ -13,6 +13,8 @@ import com.bankapplication.dao.BranchDao;
 import com.bankapplication.dto.Bank;
 import com.bankapplication.dto.Branch;
 import com.bankapplication.dto.Manager;
+import com.bankapplication.exception.BankNotFound;
+import com.bankapplication.exception.BranchNotFound;
 
 @Service
 public class BranchService 
@@ -26,16 +28,22 @@ public class BranchService
 	{
 		ResponseStructure<Branch> res = new ResponseStructure<>();
 		Bank exBank = bDao.findBank(id);
-		Branch savedBranch = dao.saveBranch(branch);
-		exBank.getBranch().add(savedBranch);
-		savedBranch.setBank(exBank);
-		dao.updateBranch(savedBranch.getBranchId(), savedBranch);
-		
-		res.setData(savedBranch);
-		res.setMsg("Branch has been added");
-		res.setStatus(HttpStatus.CREATED.value());
+		if(exBank!=null)
+		{
+			Branch savedBranch = dao.saveBranch(branch);
+			exBank.getBranch().add(savedBranch);
+			savedBranch.setBank(exBank);
+			dao.updateBranch(savedBranch.getBranchId(), savedBranch);
 			
-		return new ResponseEntity<ResponseStructure<Branch>>(res , HttpStatus.CREATED);
+			res.setData(savedBranch);
+			res.setMsg("Branch has been added");
+			res.setStatus(HttpStatus.CREATED.value());
+				
+			return new ResponseEntity<ResponseStructure<Branch>>(res , HttpStatus.CREATED);
+		}
+		else {
+			throw new BankNotFound("Bank Not Found In The Given Id");
+		}
 	}
 	
 	public ResponseEntity<ResponseStructure<Branch>> findBranch(int branchId)
@@ -98,7 +106,9 @@ public class BranchService
 			str.setMsg("Branch with id::" + id + " is updated");
 			return new ResponseEntity<ResponseStructure<Branch>>(str, HttpStatus.FOUND);
 		}
-		return null; // Branch not found exception
+		else {
+			throw new BranchNotFound("Branch Not Found In The Given Id");
+		}
 
 	}
 	
@@ -117,10 +127,10 @@ public class BranchService
 				return new ResponseEntity<ResponseStructure<Branch>>(res, HttpStatus.CREATED);
 				
 			} else {
-				return null; // No branch Found Exception
+				throw new BranchNotFound("Branch Not Found In The Given Id");
 			}
 		} else {
-			return null; // No bank found exception
+			throw new BankNotFound("Bank Not Found In The Given Id");
 		}
 	}
 	

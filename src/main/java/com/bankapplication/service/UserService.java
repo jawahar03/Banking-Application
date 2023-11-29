@@ -16,6 +16,10 @@ import com.bankapplication.dto.AccountType;
 import com.bankapplication.dto.Branch;
 import com.bankapplication.dto.Manager;
 import com.bankapplication.dto.User;
+import com.bankapplication.exception.IncorrectPassword;
+import com.bankapplication.exception.InvalidAccountType;
+import com.bankapplication.exception.ManagerNotFound;
+import com.bankapplication.exception.UserNotFoundException;
 
 @Service
 public class UserService {
@@ -37,7 +41,7 @@ public class UserService {
 			} else if (accType == 2) {
 				a.setType(AccountType.CURRENT);
 			} else {
-				return null; // account type mismatch exception
+				throw new InvalidAccountType("Invalid Account Type");
 			}
 
 			user.setAccount(a);
@@ -54,7 +58,7 @@ public class UserService {
 			return new ResponseEntity<ResponseStructure<User>>(res, HttpStatus.CREATED);
 
 		} else {
-			return null; // manager not found exception
+			throw new ManagerNotFound("Manager Not Found");
 		}
 	}
 	
@@ -70,7 +74,7 @@ public class UserService {
 			return new ResponseEntity<ResponseStructure<User>>(res, HttpStatus.FOUND);
 		}
 		else {
-			return null; //no user found exception
+			throw new UserNotFoundException("User Not Found");
 		}
 	}
 	
@@ -90,7 +94,7 @@ public class UserService {
 			return new ResponseEntity<ResponseStructure<User>>(res, HttpStatus.CREATED);
 		}
 		else {
-			return null; //user not found exception
+			throw new UserNotFoundException("User Not Found");
 		}
 	}
 	
@@ -108,7 +112,7 @@ public class UserService {
 			return new ResponseEntity<ResponseStructure<User>>(res,HttpStatus.CREATED);
 		}
 		else {
-			return null; //no user found exception
+			throw new UserNotFoundException("User Not Found");
 		}
 	}
 	
@@ -137,11 +141,11 @@ public class UserService {
 				return new ResponseEntity<ResponseStructure<User>>(res,HttpStatus.FOUND);
 			}
 			else {
-				return  null; //forbidden
+				throw new IncorrectPassword("Incorrect Password");
 			}
 		}
 		else {
-			return null; //user not found exception
+			throw new UserNotFoundException("User Not Found");
 		}
 	}
 	

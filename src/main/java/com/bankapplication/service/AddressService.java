@@ -12,6 +12,9 @@ import com.bankapplication.dao.UserDao;
 import com.bankapplication.dto.Address;
 import com.bankapplication.dto.Branch;
 import com.bankapplication.dto.User;
+import com.bankapplication.exception.AddressNotFound;
+import com.bankapplication.exception.BranchNotFound;
+import com.bankapplication.exception.UserNotFoundException;
 
 @Service
 public class AddressService 
@@ -27,24 +30,36 @@ public class AddressService
 	{
 		ResponseStructure<User> res = new ResponseStructure<>();
 		User user = udao.findUser(uId);
-		adao.saveAddress(address);
-		user.setAddress(address);
-		User updatedUser = udao.updateUser(uId, user);
-		res.setData(updatedUser);
-		res.setMsg("Address added for user id: " +uId);
-		return new ResponseEntity<ResponseStructure<User>>(res, HttpStatus.CREATED);
+		if(user!=null)
+		{
+			adao.saveAddress(address);
+			user.setAddress(address);
+			User updatedUser = udao.updateUser(uId, user);
+			res.setData(updatedUser);
+			res.setMsg("Address added for user id: " +uId);
+			return new ResponseEntity<ResponseStructure<User>>(res, HttpStatus.CREATED);
+		}
+		else {
+			throw new UserNotFoundException("User Not Found In The Given Id");
+		}
 	}
 	
 	public ResponseEntity<ResponseStructure<Branch>> createAddressForBranch(int bId, Address address)
 	{
 		ResponseStructure<Branch> res = new ResponseStructure<>();
 		Branch branch = bdao.findBranch(bId);
-		adao.saveAddress(address);
-		branch.setAddress(address);
-		Branch savedBranch = bdao.updateBranch(bId, branch);
-		res.setData(savedBranch);
-		res.setMsg("Address added for user id: " +bId);
-		return new ResponseEntity<ResponseStructure<Branch>>(res, HttpStatus.CREATED);
+		if(branch!=null)
+		{
+			adao.saveAddress(address);
+			branch.setAddress(address);
+			Branch savedBranch = bdao.updateBranch(bId, branch);
+			res.setData(savedBranch);
+			res.setMsg("Address added for user id: " +bId);
+			return new ResponseEntity<ResponseStructure<Branch>>(res, HttpStatus.CREATED);
+		}
+		else {
+			throw new BranchNotFound("Branch Not Found In The Given Id");
+		}
 	}
 	
 	public ResponseEntity<ResponseStructure<Address>> updateAddress(int id , Address a)
@@ -60,7 +75,7 @@ public class AddressService
 			return new ResponseEntity<ResponseStructure<Address>>(res, HttpStatus.CREATED);
 		}
 		else {
-			return null; //no address found
+			throw new AddressNotFound("Address Not Found In The Given Id");
 		}
 		
 		

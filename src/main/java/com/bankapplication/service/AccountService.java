@@ -10,6 +10,8 @@ import com.bankapplication.dao.AccountDao;
 import com.bankapplication.dto.Account;
 import com.bankapplication.dto.AccountType;
 import com.bankapplication.dto.User;
+import com.bankapplication.exception.AccountNotFound;
+import com.bankapplication.exception.InvalidAccountType;
 
 @Service
 public class AccountService {
@@ -30,7 +32,7 @@ public class AccountService {
 
 			return new ResponseEntity<ResponseStructure<User>>(res, HttpStatus.CREATED);
 		} else {
-			return null; // No account found exception
+			throw new AccountNotFound("Account Not Found In The Given Id");
 		}
 	}
 
@@ -53,21 +55,27 @@ public class AccountService {
 				res.setStatus(HttpStatus.CREATED.value());
 				return new ResponseEntity<ResponseStructure<Account>>(res, HttpStatus.CREATED);
 			} else {
-				return null; // bad request
+				throw new InvalidAccountType("Invalid Account Type");
 			}
 		} else {
-			return null; // account not found exception
+			throw new AccountNotFound("Account Not Found In The Given Id");		
 		}
 	}
 	
 	public ResponseEntity<ResponseStructure<Account>> findbyAccountNumber(int num)
 	{
 		ResponseStructure<Account> res = new ResponseStructure<>();
-		res.setData(adao.findByAccountNumber(num));
-		res.setMsg("Account found");
-		res.setStatus(HttpStatus.FOUND.value());
-		
-		return new ResponseEntity<ResponseStructure<Account>>(res,HttpStatus.FOUND);
+		if(adao.findByAccountNumber(num)!=null)
+		{
+			res.setData(adao.findByAccountNumber(num));
+			res.setMsg("Account found");
+			res.setStatus(HttpStatus.FOUND.value());
+			
+			return new ResponseEntity<ResponseStructure<Account>>(res,HttpStatus.FOUND);
+		}
+		else {
+			throw new AccountNotFound("Account Not Found In The Given Id");
+		}
 	}
 	
 }
