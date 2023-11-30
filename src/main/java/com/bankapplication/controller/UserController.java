@@ -16,6 +16,8 @@ import com.bankapplication.config.ResponseStructure;
 import com.bankapplication.dto.User;
 import com.bankapplication.service.UserService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/user")
 public class UserController 
@@ -24,7 +26,7 @@ public class UserController
 	UserService ser;
 	
 	@PostMapping
-	public ResponseEntity<ResponseStructure<User>> saveUser(@RequestBody User u, @RequestParam int accType, @RequestParam String mName, @RequestParam String password )
+	public ResponseEntity<ResponseStructure<User>> saveUser(@Valid  @RequestBody User u, @RequestParam int accType, @RequestParam String mName, @RequestParam String password )
 	{
 		return ser.saveUser(u, accType, mName, password);
 	}

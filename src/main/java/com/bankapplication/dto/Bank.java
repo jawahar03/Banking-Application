@@ -13,6 +13,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,6 +27,8 @@ public class Bank
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int bankId;
+	@NotNull
+	@NotBlank
 	private String bankName;
 	@OneToOne(cascade = CascadeType.ALL)
 	private Address address;

@@ -16,6 +16,8 @@ import com.bankapplication.dto.Manager;
 import com.bankapplication.dto.User;
 import com.bankapplication.service.ManagerService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/manager")
 public class ManagerController 
@@ -24,7 +26,7 @@ public class ManagerController
 	ManagerService ser;
 	
 	@PostMapping
-	public ResponseEntity<ResponseStructure<Manager>> saveManager(@RequestBody Manager m ,@RequestParam int id )
+	public ResponseEntity<ResponseStructure<Manager>> saveManager(@Valid @RequestBody Manager m ,@RequestParam int id )
 	{
 		return ser.saveManager(m, id);
 	}
